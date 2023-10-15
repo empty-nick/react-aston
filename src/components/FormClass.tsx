@@ -49,13 +49,13 @@ class FormClass extends React.Component<IProps, IState> {
 	}
 
 	decrement = () =>{
-		this.setState(state => ({
-			counter: state.counter - 1
+		this.setState(prevState => ({
+			counter: prevState.counter - 1
 		}))
 	}
 	increment = () =>{
-		this.setState(state => ({
-			counter: state.counter + 1
+		this.setState(prevState => ({
+			counter: prevState.counter + 1
 		}))
 	}
 	handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
@@ -70,25 +70,26 @@ class FormClass extends React.Component<IProps, IState> {
 	}
 	render(): ReactElement {
 		console.log('Render')
+		const { text, isTextReady, counter } = this.state;
 		return (
 			<>
 				<form onSubmit={this.handleSubmit}>
 					<input
 						type='text'
-						value={this.state.text}
+						value={text}
 						onInput={this.handleInput}
 					/> <br />
 					<button type='submit'>Submit</button>
 					<button onClick={this.clearInput}>Hide text</button> <br />
 
-					{(this.state.isTextReady && this.state.text) && (
-						<p>{this.state.text}</p>
+					{(isTextReady && text) && (
+						<p>{text}</p>
 					)} <br />
 				</form>
 				<Counter
 					decrement={this.decrement}
 					increment={this.increment}
-					countValue={this.state.counter}
+					countValue={counter}
 				/>
 			</>
 		)
