@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react'
 import Counter from "./Counter.tsx";
+import { Tasks } from "./Tasks.tsx";
 
 interface IProps {
 
@@ -8,12 +9,15 @@ interface IState {
 	text: string;
 	isTextReady: boolean;
 	counter: number;
+	isReactWordExist: boolean;
 }
 class FormClass extends React.Component<IProps, IState> {
+	private readonly inputRef: React.RefObject<HTMLInputElement>;
 	constructor(props: object) {
 		console.log('Constructor')
 		super(props)
-		this.state = { text: '', counter: 0, isTextReady: false };
+		this.state = { text: '', counter: 0, isTextReady: false, isReactWordExist: false };
+		this.inputRef = React.createRef()
 	}
 	// componentWillReceiveProps() {
 	// 	console.log('componentWillReceiveProps')
@@ -58,19 +62,22 @@ class FormClass extends React.Component<IProps, IState> {
 			counter: prevState.counter + 1
 		}))
 	}
-	handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
-		event.preventDefault()
+	handleSubmit = () => {
 		this.setState({ isTextReady: true })
 	}
 	handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-		this.setState({ text: event.target.value })
+		const isExist = new RegExp(/^([Rr]eact|[Рр]еакт)$/gm).test(event.target.value)
+		this.setState({ text: event.target.value, isReactWordExist: isExist })
 	}
 	clearInput = () => {
 		this.setState({ text: '', isTextReady: false })
 	}
+	focusInput = () => {
+		this.inputRef.current?.focus()
+	}
 	render(): ReactElement {
 		console.log('Render')
-		const { text, isTextReady, counter } = this.state;
+		const { text, isTextReady, counter, isReactWordExist } = this.state;
 		return (
 			<>
 				<form onSubmit={this.handleSubmit}>
@@ -78,11 +85,13 @@ class FormClass extends React.Component<IProps, IState> {
 						type='text'
 						value={text}
 						onInput={this.handleInput}
+						ref={this.inputRef}
 					/> <br />
-					<button type='submit'>Submit</button>
-					<button onClick={this.clearInput}>Hide text</button> <br />
+					<button type='submit' disabled={isReactWordExist}>Submit</button>
+					<button onClick={this.clearInput}>Clear input</button> <br />
+					<button onClick={this.focusInput}>Focus on input field</button> <br />
 
-					{(isTextReady && text) && (
+					{(isTextReady && text && !isReactWordExist) && (
 						<p>{text}</p>
 					)} <br />
 				</form>
@@ -91,6 +100,7 @@ class FormClass extends React.Component<IProps, IState> {
 					increment={this.increment}
 					countValue={counter}
 				/>
+				<Tasks />
 			</>
 		)
 	}
