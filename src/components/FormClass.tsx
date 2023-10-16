@@ -62,7 +62,8 @@ class FormClass extends React.Component<IProps, IState> {
 			counter: prevState.counter + 1
 		}))
 	}
-	handleSubmit = () => {
+	handleSubmit = (event: React.FormEvent) => {
+		event.preventDefault()
 		this.setState({ isTextReady: true })
 	}
 	handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
