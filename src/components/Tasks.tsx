@@ -12,7 +12,8 @@ export function Tasks(): ReactElement {
 		// Это чтобы когда происходит toggleComplete порядок элементов не менялся
 		setTasks( prevState => prevState.map(taskState => taskState.id === id ? {id, isCompleted: !isCompleted, text} : taskState))
 	}
-	const submitHandler = () => {
+	const submitHandler = (event: React.FormEvent) => {
+		event.preventDefault()
 		if (input)
 			setTasks(prevState => [...prevState, { id: new Date().getMilliseconds(), text: input, isCompleted: false }])
 		setInput('')
